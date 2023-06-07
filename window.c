@@ -1,6 +1,6 @@
 #include "window.h"
 
-void free_game_window(BG_GameWindow *window)
+void free_game_window(GameWindow *window)
 {
     SDL_DestroyRenderer(window->renderer);
     SDL_DestroyWindow(window->window);
@@ -8,9 +8,9 @@ void free_game_window(BG_GameWindow *window)
     SDL_Quit();
 }
 
-BG_GameWindow *create_game_window(const char *window_title, int width, int height)
+GameWindow *create_game_window(const char *window_title, int width, int height)
 {
-    BG_GameWindow *game = malloc(sizeof(BG_GameWindow));
+    GameWindow *game = malloc(sizeof(GameWindow));
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -34,12 +34,12 @@ BG_GameWindow *create_game_window(const char *window_title, int width, int heigh
     return game;
 }
 
-void game_window_begin_drawing(BG_GameWindow *window, uint8_t red, uint8_t green, uint8_t blue)
+void game_window_begin_drawing(GameWindow *window, SDL_Color clear_color)
 {
-    SDL_SetRenderDrawColor(window->renderer, red, green, blue, 255);
+    SDL_SetRenderDrawColor(window->renderer, clear_color.r, clear_color.g, clear_color.b, 255);
     SDL_RenderClear(window->renderer);
 }
-void game_window_end_drawing(BG_GameWindow *window)
+void game_window_end_drawing(GameWindow *window)
 {
     SDL_RenderPresent(window->renderer);
 }

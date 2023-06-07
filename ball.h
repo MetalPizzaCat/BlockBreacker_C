@@ -1,15 +1,20 @@
 #pragma once
 #include <stdlib.h>
 #include <SDL2/SDL.h>
+#include "geometry.h"
 
-struct Ball
+/// @brief The movable ball that bounces around and kills everything
+typedef struct
 {
-    float x;
-    float y;
-    float size;
-};
+    /// @brief Collision rect of the ball
+    Rect collision_rect;
+    Vector2 velocity;
+} Ball;
 
-typedef struct Ball BG_Ball;
-
-BG_Ball create_ball(float x, float y, float size);
-void free_ball(BG_Ball * ball);
+/// @brief Initialises instance of the ball
+/// @param ball Instance to initialise
+/// @param position Ball position(starting from the middle)
+/// @param size radius of the ball
+void init_ball(Ball *ball, Vector2 position, float size);
+void draw_ball(Ball *ball, SDL_Renderer *render);
+void free_ball(Ball *ball);

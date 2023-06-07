@@ -2,14 +2,30 @@
 
 #include <stdlib.h>
 #include <SDL2/SDL.h>
-struct GameWindow
+
+/// @brief Struct that holds information about SDL2 window 
+typedef struct 
 {
     SDL_Window *window;
     SDL_Renderer *renderer;
-};
-typedef struct GameWindow BG_GameWindow;
+} GameWindow;
 
-void free_game_window(BG_GameWindow *window);
-void game_window_begin_drawing(BG_GameWindow *window, uint8_t red, uint8_t green, uint8_t blue);
-void game_window_end_drawing(BG_GameWindow *window);
-BG_GameWindow *create_game_window(const char *window_title, int width, int height);
+/// @brief Frees memory used by window and SDL2
+/// @param window Window handle
+void free_game_window(GameWindow *window);
+
+/// @brief Clears the canvas and sets window into drawing mode
+/// @param window Window handle
+/// @param clear_color Canvas clear color
+void game_window_begin_drawing(GameWindow *window, SDL_Color clear_color);
+
+/// @brief Sets window into normal mode and renders all of the changes
+/// @param window Window handle
+void game_window_end_drawing(GameWindow *window);
+
+/// @brief Inits SDL2 and creates a new window handle
+/// @param window_title 
+/// @param width 
+/// @param height 
+/// @return Window handle or NULL if failed to create
+GameWindow *create_game_window(const char *window_title, int width, int height);
