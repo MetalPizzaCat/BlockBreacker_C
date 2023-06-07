@@ -37,3 +37,9 @@ Vector2 vec2_mul_f(Vector2 a, float m);
 /// @param size Size of the rectangle
 /// @return created rectangle with values assigned
 Rect rect(Vector2 pos, Vector2 size);
+
+/// @brief Checks whether there is intersection between rectangles
+/// @param a 
+/// @param b 
+/// @return 1 if there is intersection and 0 if not
+int rect_does_intersect(Rect const *a, Rect const *b);

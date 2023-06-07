@@ -26,6 +26,38 @@ void init_game(Game *game, GameWindow *window)
 void update_game(Game *game, float delta)
 {
     game->ball.collision_rect.position = vec2_add(game->ball.collision_rect.position, vec2_mul_f(game->ball.velocity, delta));
+    for (uint32_t i = 0; i < BLOCK_COUNT_TOTAL; i++)
+    {
+        if (rect_does_intersect(&game->ball.collision_rect, &game->blocks[i].collision_rect))
+        {
+            // grab the values so we don't have to look at the massive lines
+            Vector2 const *ball_pos = &game->ball.collision_rect.position;
+            Vector2 const *brick_pos = &game->blocks[i].collision_rect.position;
+            Vector2 const *brick_size = &game->blocks[i].collision_rect.size;
+
+            // underneath
+            if (ball_pos->y >= brick_pos->y + (brick_size->y / 2.f))
+            {
+                game->ball.velocity.y *= -1.f;
+            }
+            // above
+            else if (ball_pos->y <= brick_pos->y + (brick_size->y / 2.f))
+            {
+                game->ball.velocity.y *= -1.f;
+            }
+            // left
+            else if (ball_pos->x <= brick_pos->x - (brick_size->x / 2.f))
+            {
+                game->ball.velocity.x *= -1.f;
+            }
+            // right
+            else if (ball_pos->y <= brick_pos->x - (brick_size->x / 2.f))
+            {
+                game->ball.velocity.x *= -1.f;
+            }
+            break;
+        }
+    }
     if (game->ball.collision_rect.position.x < 0)
     {
         game->ball.collision_rect.position.x = 0;
