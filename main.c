@@ -22,7 +22,7 @@ typedef enum
 /// @brief Generates map key based on tiles in the game instance
 /// @param game Game instance to generate from
 /// @return Map key
-uint64_t generate_map(Game *game)
+uint64_t generate_map(Game const *game)
 {
     uint64_t out = 0;
     for (uint64_t i = 0; i < BLOCK_COUNT_TOTAL; i++)
@@ -118,6 +118,14 @@ void handle_paddle_movement(Block *paddle, KeyHandler const *handler, float delt
     {
         paddle->collision_rect.position.y += speed * delta;
     }
+    if (paddle->collision_rect.position.x + paddle->collision_rect.size.x > DEFAULT_WINDOW_WIDTH)
+    {
+        paddle->collision_rect.position.x = DEFAULT_WINDOW_WIDTH - paddle->collision_rect.size.x;
+    }
+    else if (paddle->collision_rect.position.x < 0)
+    {
+        paddle->collision_rect.position.x = 0;
+    }
 }
 
 void run_game(AppState state, GameWindow *window, uint64_t map)
@@ -145,7 +153,10 @@ void run_game(AppState state, GameWindow *window, uint64_t map)
             handle_keyboard_event(&handler, &e);
             handle_paddle_movement(&game.paddle, &handler, deltaTime, 500.f);
         }
-
+        if (handler.space_key_state)
+        {
+            game.ball_launched = 1;
+        }
         last = now;
         now = SDL_GetPerformanceCounter();
         deltaTime = ((float)(now - last) * 1000.f / (float)SDL_GetPerformanceFrequency());

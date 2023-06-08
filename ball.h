@@ -17,5 +17,5 @@ typedef struct
 /// @param position Ball position(starting from the middle)
 /// @param size radius of the ball
 void init_ball(Ball *ball, Vector2 position, float size);
-void draw_ball(Ball *ball, SDL_Renderer *render);
+void draw_ball(Ball const *ball, SDL_Renderer *render);
 void free_ball(Ball *ball);

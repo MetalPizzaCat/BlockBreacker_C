@@ -14,6 +14,7 @@ typedef struct
     Ball ball;
     /// @brief Paddle controllable by player
     Block paddle;
+    int ball_launched;
 } Game;
 
 /// @brief Init instance of a game
@@ -26,8 +27,16 @@ void init_game(Game *game, GameWindow *window, uint64_t map);
 /// @param delta time since last frame
 void update_game(Game *game, float delta);
 
-/// @brief Perform ball collision check and reaction 
+/// @brief Perform ball collision check and reaction
 /// @param game Game which stores the ball
 /// @param block Block to check against
 /// @return 1 if there was collision and 0 if there was not
 int game_ball_check_block_collision(Game *game, Block *block);
+
+/// @brief Make game perform logic necessary to consider ball dead
+/// @param game Game itself
+void game_ball_die(Game *game);
+
+/// @brief Resets ball and paddle to the default position and awaits player input
+/// @param game Game itself
+void game_reset_ball_and_paddle(Game *game);

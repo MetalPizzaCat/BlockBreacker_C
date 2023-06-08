@@ -1,7 +1,7 @@
 #include "ball.h"
 #include "block.h"
 
-void draw_ball(Ball *ball, SDL_Renderer *render)
+void draw_ball(Ball const *ball, SDL_Renderer *render)
 {
     SDL_Color prim_color = get_block_color(EBC_Green);
     SDL_SetRenderDrawColor(render, prim_color.r, prim_color.g, prim_color.b, prim_color.a);

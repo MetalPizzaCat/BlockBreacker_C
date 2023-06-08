@@ -3,6 +3,7 @@
 void init_game(Game *game, GameWindow *window, uint64_t map)
 {
     game->window = window;
+    game->ball_launched = 0;
 
     const float block_width = DEFAULT_WINDOW_WIDTH / BLOCK_COUNT_HORIZONTAL;
     const float block_height = DEFAULT_WINDOW_HEIGHT / BLOCK_COUNT_VERTICAL * (BLOCK_SIZE_RATIO);
@@ -31,8 +32,7 @@ void init_game(Game *game, GameWindow *window, uint64_t map)
     }
     printf("\n");
 
-    init_ball(&game->ball, vec2(DEFAULT_WINDOW_WIDTH / 2.f, DEFAULT_WINDOW_HEIGHT / 2.f), 5.f);
-    init_block(&game->paddle, rect(vec2_add(vec2(DEFAULT_WINDOW_WIDTH / 2.f, DEFAULT_WINDOW_HEIGHT * 0.9f), vec2(10, 10)), vec2(100, 10)), EPBC_LightGray, 0);
+    game_reset_ball_and_paddle(game);
 }
 
 int game_ball_check_block_collision(Game *game, Block *block)
@@ -59,7 +59,7 @@ int game_ball_check_block_collision(Game *game, Block *block)
             game->ball.velocity.y = game->ball.default_velocity.y;
         }
         // left
-        if (ball_pos.x < brick_pos->x - (brick_size->x / 2.f))
+        else if (ball_pos.x < brick_pos->x - (brick_size->x / 2.f))
         {
             game->ball.velocity.x = -game->ball.default_velocity.x;
         }
@@ -76,6 +76,13 @@ int game_ball_check_block_collision(Game *game, Block *block)
 
 void update_game(Game *game, float delta)
 {
+    // if game has not started yet(ball didn't get launched)
+    // logic works differently where we just move the ball around
+    if (!game->ball_launched)
+    {
+        game->ball.collision_rect.position = vec2_add(game->paddle.collision_rect.position, vec2(game->paddle.collision_rect.size.x / 2.f, -15.f));
+        return;
+    }
     game->ball.collision_rect.position = vec2_add(game->ball.collision_rect.position, vec2_mul_f(game->ball.velocity, delta));
     for (uint32_t i = 0; i < BLOCK_COUNT_TOTAL; i++)
     {
@@ -103,7 +110,19 @@ void update_game(Game *game, float delta)
     }
     if (game->ball.collision_rect.position.y > DEFAULT_WINDOW_HEIGHT)
     {
-        game->ball.collision_rect.position.y = DEFAULT_WINDOW_HEIGHT;
-        game->ball.velocity.y *= -1.f;
+        game_ball_die(game);
     }
+}
+
+void game_reset_ball_and_paddle(Game *game)
+{
+    Vector2 start_pos = vec2_add(vec2(DEFAULT_WINDOW_WIDTH / 2.f, DEFAULT_WINDOW_HEIGHT * 0.9f), vec2(10, 10));
+    init_ball(&game->ball, vec2_add(start_pos, vec2(50, -15.f)), 5.f);
+    init_block(&game->paddle, rect(start_pos, vec2(100, 10)), EPBC_LightGray, 0);
+}
+
+void game_ball_die(Game *game)
+{
+    game_reset_ball_and_paddle(game);
+    game->ball_launched = 0;
 }
