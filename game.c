@@ -28,6 +28,10 @@ void update_game(Game *game, float delta)
     game->ball.collision_rect.position = vec2_add(game->ball.collision_rect.position, vec2_mul_f(game->ball.velocity, delta));
     for (uint32_t i = 0; i < BLOCK_COUNT_TOTAL; i++)
     {
+        if (!valid_block(&game->blocks[i]))
+        {
+            continue;
+        }
         if (rect_does_intersect(&game->ball.collision_rect, &game->blocks[i].collision_rect))
         {
             // grab the values so we don't have to look at the massive lines
@@ -46,15 +50,16 @@ void update_game(Game *game, float delta)
                 game->ball.velocity.y *= -1.f;
             }
             // left
-            else if (ball_pos->x <= brick_pos->x - (brick_size->x / 2.f))
+            if (ball_pos->x < brick_pos->x - (brick_size->x / 2.f))
             {
                 game->ball.velocity.x *= -1.f;
             }
             // right
-            else if (ball_pos->y <= brick_pos->x - (brick_size->x / 2.f))
+            else if (ball_pos->x > brick_pos->x - (brick_size->x / 2.f))
             {
                 game->ball.velocity.x *= -1.f;
             }
+            damage_block(&game->blocks[i]);
             break;
         }
     }

@@ -22,10 +22,19 @@ typedef struct
 void init_block(Block *block, Rect rect, EPrimaryBlockColor color);
 
 /// @brief Renders the block to the renderer
-/// @param block 
-/// @param render 
+/// @param block
+/// @param render
 void draw_block(Block const *block, SDL_Renderer *render);
 
+/// @brief Damages the block
+/// @param block
+void damage_block(Block *block);
+
+/// @brief Is block valid for the game(not destroyed)
+/// @param block
+/// @return 1 if block is not destroyed 0 otherwise
+int valid_block(Block const *block);
+
 /// @brief Frees any memory used by the block
-/// @param block 
+/// @param block
 void free_block(Block *block);

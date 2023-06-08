@@ -28,6 +28,16 @@ void draw_block(Block const *block, SDL_Renderer *render)
     SDL_RenderFillRectF(render, &secondary_rect);
 }
 
+void damage_block(Block *block)
+{
+    block->state = EBS_Destroyed;
+}
+
+int valid_block(Block const *block)
+{
+    return block->state == EBS_Normal || block->state == EBS_Damaged;
+}
+
 void free_block(Block *block)
 {
     free(block);

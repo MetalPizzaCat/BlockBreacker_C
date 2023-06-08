@@ -42,7 +42,10 @@ int main(int argc, char **argv)
         // insert any drawing here
         for (uint32_t i = 0; i < BLOCK_COUNT_TOTAL; i++)
         {
-            draw_block(&game.blocks[i], window->renderer);
+            if (valid_block(&game.blocks[i]))
+            {
+                draw_block(&game.blocks[i], window->renderer);
+            }
         }
         draw_ball(&game.ball, window->renderer);
         game_window_end_drawing(window);
