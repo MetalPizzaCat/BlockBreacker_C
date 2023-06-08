@@ -1,15 +1,17 @@
 #include "game.h"
 
-void init_game(Game *game, GameWindow *window)
+void init_game(Game *game, GameWindow *window, uint64_t map)
 {
     game->window = window;
 
     const float block_width = DEFAULT_WINDOW_WIDTH / BLOCK_COUNT_HORIZONTAL;
     const float block_height = DEFAULT_WINDOW_HEIGHT / BLOCK_COUNT_VERTICAL * (BLOCK_SIZE_RATIO);
 
-    for (uint32_t x = 0; x < BLOCK_COUNT_HORIZONTAL; x++)
+    uint64_t mask = 1;
+    uint64_t offset = BLOCK_COUNT_TOTAL;
+    for (uint64_t y = 0; y < BLOCK_COUNT_VERTICAL; y++)
     {
-        for (uint32_t y = 0; y < BLOCK_COUNT_VERTICAL; y++)
+        for (uint64_t x = 0; x < BLOCK_COUNT_HORIZONTAL; x++)
         {
             init_block(
                 &game->blocks[x + y * BLOCK_COUNT_HORIZONTAL],
@@ -17,8 +19,18 @@ void init_game(Game *game, GameWindow *window)
                     vec2((float)x * block_width, (float)y * block_height),
                     vec2(block_width, block_height)),
                 rand() % EPBNC_MAX);
+
+            uint64_t key = (map & (mask << offset)) >> offset;
+            printf("%lu", key);
+            if (!key)
+            {
+                damage_block(&game->blocks[x + y * BLOCK_COUNT_HORIZONTAL]);
+            }
+            offset--;
+            
         }
     }
+    printf("\n");
 
     init_ball(&game->ball, vec2(DEFAULT_WINDOW_WIDTH / 2.f, DEFAULT_WINDOW_HEIGHT / 2.f), 15.f);
 }

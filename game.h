@@ -17,7 +17,7 @@ typedef struct
 /// @brief Init instance of a game
 /// @param game Game to init
 /// @param window valid window handle
-void init_game(Game *game, GameWindow *window);
+void init_game(Game *game, GameWindow *window, uint64_t map);
 
 /// @brief Updates all objects in the game
 /// @param game Instance of the game
