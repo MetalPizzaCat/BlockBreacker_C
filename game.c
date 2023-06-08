@@ -27,12 +27,11 @@ void init_game(Game *game, GameWindow *window, uint64_t map)
                 damage_block(&game->blocks[x + y * BLOCK_COUNT_HORIZONTAL]);
             }
             offset--;
-            
         }
     }
     printf("\n");
 
-    init_ball(&game->ball, vec2(DEFAULT_WINDOW_WIDTH / 2.f, DEFAULT_WINDOW_HEIGHT / 2.f), 15.f);
+    init_ball(&game->ball, vec2(DEFAULT_WINDOW_WIDTH / 2.f, DEFAULT_WINDOW_HEIGHT / 2.f), 5.f);
 }
 
 void update_game(Game *game, float delta)
@@ -47,29 +46,29 @@ void update_game(Game *game, float delta)
         if (rect_does_intersect(&game->ball.collision_rect, &game->blocks[i].collision_rect))
         {
             // grab the values so we don't have to look at the massive lines
-            Vector2 const *ball_pos = &game->ball.collision_rect.position;
+            Vector2 const ball_pos = vec2_add(game->ball.collision_rect.position, vec2_mul_f(game->ball.collision_rect.size, 0.5f));
             Vector2 const *brick_pos = &game->blocks[i].collision_rect.position;
             Vector2 const *brick_size = &game->blocks[i].collision_rect.size;
 
             // underneath
-            if (ball_pos->y >= brick_pos->y + (brick_size->y / 2.f))
+            if (ball_pos.y >= brick_pos->y + (brick_size->y / 2.f))
             {
-                game->ball.velocity.y *= -1.f;
+                game->ball.velocity.y = -game->ball.default_velocity.y;
             }
             // above
-            else if (ball_pos->y <= brick_pos->y + (brick_size->y / 2.f))
+            else if (ball_pos.y <= brick_pos->y + (brick_size->y / 2.f))
             {
-                game->ball.velocity.y *= -1.f;
+                game->ball.velocity.y = game->ball.default_velocity.y;
             }
             // left
-            if (ball_pos->x < brick_pos->x - (brick_size->x / 2.f))
+            if (ball_pos.x < brick_pos->x - (brick_size->x / 2.f))
             {
-                game->ball.velocity.x *= -1.f;
+                game->ball.velocity.x = -game->ball.default_velocity.x;
             }
             // right
-            else if (ball_pos->x > brick_pos->x - (brick_size->x / 2.f))
+            else if (ball_pos.x > brick_pos->x - (brick_size->x / 2.f))
             {
-                game->ball.velocity.x *= -1.f;
+                game->ball.velocity.x = game->ball.default_velocity.x;
             }
             damage_block(&game->blocks[i]);
             break;

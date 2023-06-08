@@ -9,6 +9,7 @@ typedef struct
     /// @brief Collision rect of the ball
     Rect collision_rect;
     Vector2 velocity;
+    Vector2 default_velocity;
 } Ball;
 
 /// @brief Initialises instance of the ball

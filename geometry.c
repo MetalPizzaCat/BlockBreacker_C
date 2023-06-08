@@ -37,11 +37,11 @@ int rect_does_intersect(Rect const *a, Rect const *b)
 {
     // i took this code from older project written in rust where boxes have coords in the middle
     // and i have no idea how this works :3
-    if (b->size.x + a->size.x - (float)fabs(b->position.x - b->size.x / 2.f - a->position.x - a->size.x / 2.f) <= 0.f)
+    if ((b->size.x / 2.f + a->size.x / 2.f - (float)fabs(b->position.x + b->size.x / 4.f - a->position.x + a->size.x / 4.f)) <= 0.f)
     {
         return 0;
     }
-    if (b->size.y + a->size.y - (float)fabs(b->position.y - b->size.y / 2.f - a->position.y - a->size.y / 2.f) <= 0.f)
+    if ((b->size.y / 2.f + a->size.y / 2.f - (float)fabs(b->position.y + b->size.y / 4.f - a->position.y + a->size.y / 4.f)) <= 0.f)
     {
         return 0;
     }
