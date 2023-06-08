@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include <SDL_mixer.h>
 #include "game.h"
 #include "keyhandler.h"
+#include "audio.h"
 
 SDL_Color create_sdl_color(uint8_t r, uint8_t g, uint8_t b)
 {
@@ -128,13 +130,13 @@ void handle_paddle_movement(Block *paddle, KeyHandler const *handler, float delt
     }
 }
 
-void run_game(AppState state, GameWindow *window, uint64_t map)
+void run_game(AppState state, GameWindow *window, AudioManager *audio, uint64_t map)
 {
     Game game;
     KeyHandler handler;
     init_key_handler(&handler, 0);
     // (uint64_t)-1 wraps around to becoming max value of unsigned 64 bit integer
-    init_game(&game, window, (map ? map : (uint64_t)-1));
+    init_game(&game, window, audio, (map ? map : (uint64_t)-1));
     uint64_t now = SDL_GetPerformanceCounter();
     uint64_t last = 0;
     float deltaTime = 0.f;
@@ -189,9 +191,11 @@ int main(int argc, char **argv)
     {
         return EXIT_FAILURE;
     }
-    run_game(state, window, map);
+    AudioManager audio;
+    init_audio(&audio);
+    run_game(state, window, &audio, map);
 
+    free_audio(&audio);
     free_game_window(window);
-
     return EXIT_SUCCESS;
 }

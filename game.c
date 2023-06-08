@@ -1,9 +1,10 @@
 #include "game.h"
 
-void init_game(Game *game, GameWindow *window, uint64_t map)
+void init_game(Game *game, GameWindow *window, AudioManager *audio, uint64_t map)
 {
     game->window = window;
     game->ball_launched = 0;
+    game->audio = audio;
 
     const float block_width = DEFAULT_WINDOW_WIDTH / BLOCK_COUNT_HORIZONTAL;
     const float block_height = DEFAULT_WINDOW_HEIGHT / BLOCK_COUNT_VERTICAL * (BLOCK_SIZE_RATIO);
@@ -88,10 +89,17 @@ void update_game(Game *game, float delta)
     {
         if (game_ball_check_block_collision(game, &game->blocks[i]))
         {
+            if (game->audio != NULL)
+            {
+                play_sound_destruction(game->audio);
+            }
             break;
         }
     }
-    game_ball_check_block_collision(game, &game->paddle);
+    if (game_ball_check_block_collision(game, &game->paddle) && game->audio != NULL)
+    {
+        play_sound_hit(game->audio);
+    }
     if (game->ball.collision_rect.position.x < 0)
     {
         game->ball.collision_rect.position.x = 0;
@@ -123,6 +131,10 @@ void game_reset_ball_and_paddle(Game *game)
 
 void game_ball_die(Game *game)
 {
+    if (game->audio != NULL)
+    {
+        play_sound_fail(game->audio);
+    }
     game_reset_ball_and_paddle(game);
     game->ball_launched = 0;
 }

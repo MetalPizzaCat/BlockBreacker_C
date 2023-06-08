@@ -11,7 +11,7 @@ void free_game_window(GameWindow *window)
 GameWindow *create_game_window(const char *window_title, int width, int height)
 {
     GameWindow *game = malloc(sizeof(GameWindow));
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
     {
         fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         free(game);

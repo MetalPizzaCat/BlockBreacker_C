@@ -2,12 +2,15 @@
 #include "window.h"
 #include "ball.h"
 #include "block.h"
+#include "audio.h"
 
 /// @brief Struct that holds all of the information about the game
 typedef struct
 {
     /// @brief Game window
     GameWindow *window;
+    /// @brief Audio manager used to play sounds in the game
+    AudioManager *audio;
     /// @brief  All of the blocks present in the game
     Block blocks[BLOCK_COUNT_TOTAL];
     /// @brief Main ball that flies around
@@ -20,7 +23,7 @@ typedef struct
 /// @brief Init instance of a game
 /// @param game Game to init
 /// @param window valid window handle
-void init_game(Game *game, GameWindow *window, uint64_t map);
+void init_game(Game *game, GameWindow *window, AudioManager *audio, uint64_t map);
 
 /// @brief Updates all objects in the game
 /// @param game Instance of the game
