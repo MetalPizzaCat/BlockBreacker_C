@@ -21,7 +21,7 @@ int32_t init_audio(AudioManager *audio)
     audio->destruction_sound = load_from_file(GAME_DESTRUCTION_SOUND_PATH);
     audio->fail_sound = load_from_file(GAME_FAIL_SOUND_PATH);
     audio->hit_sound = load_from_file(GAME_HIT_SOUND_PATH);
-
+    audio->win_sound = load_from_file(GAME_WIN_SOUND_PATH);
     return 1;
 }
 
@@ -44,6 +44,14 @@ void play_sound_destruction(AudioManager *manager)
     if (manager->destruction_sound != NULL)
     {
         Mix_PlayChannel(-1, manager->destruction_sound, 0);
+    }
+}
+
+void play_sound_win(AudioManager *manager)
+{
+    if (manager->win_sound != NULL)
+    {
+        Mix_PlayChannel(-1, manager->win_sound, 0);
     }
 }
 

@@ -7,6 +7,7 @@ typedef struct
     Mix_Chunk *fail_sound;
     Mix_Chunk *hit_sound;
     Mix_Chunk *destruction_sound;
+    Mix_Chunk *win_sound;
 } AudioManager;
 
 /// @brief Load a sound effect from a file or print the error
@@ -30,6 +31,11 @@ void play_sound_hit(AudioManager*manager);
 /// @brief Plays the fail sound(or no sound if loading failed)
 /// @param manager 
 void play_sound_fail(AudioManager*manager);
+
+/// @brief Plays the win sound(or no sound if loading failed)
+/// @param manager 
+void play_sound_win(AudioManager*manager);
+
 
 /// @brief Plays the destruction sound(or no sound if loading failed)
 /// @param manager 

@@ -35,8 +35,28 @@ Rect rect(Vector2 pos, Vector2 size)
 
 int rect_does_intersect(Rect const *a, Rect const *b)
 {
-    // i took this code from older project written in rust where boxes have coords in the middle
-    // and i have no idea how this works :3
+    /*NOTE: i took this code from older project written in rust where boxes have coords in the middle
+     This works by checking if distance between centers of the boxes is larger then sizes of the boxes
+     and if it is then sides are far too far away from each other to be considered colliding
+     we do this for both axis
+     Note 2 electric boogalo: diving by 2 and 4 is simply there to adjust difference in how boxes are handled
+     This project:
+    this project
+        #--w--*
+        |     |
+        h     h
+        |     |
+        *--w--*
+     original project
+        *-------*
+        |  |h   |
+        |-w-#-w-|
+        |  |h   |
+        *-------*
+
+        where # is the root point(point from where position is calculated)
+        because of this W(original) = W(current) / 2 with same for the height
+    */
     if ((b->size.x / 2.f + a->size.x / 2.f - (float)fabs(b->position.x + b->size.x / 4.f - a->position.x + a->size.x / 4.f)) <= 0.f)
     {
         return 0;

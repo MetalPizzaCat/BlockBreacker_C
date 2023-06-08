@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 set(GAME_FAIL_SOUND audio/fail1.wav)
 set(GAME_HIT_SOUND audio/hit_soft1.wav)
 set(GAME_DESTRUCTION_SOUND audio/hit1.wav)
+set(GAME_WIN_SOUND audio/hit1.wav)
 
 option(USE_MAP_LOADING "Enable map loading(using a 64 bit integer to load map layout)" OFF)
 
@@ -24,6 +25,7 @@ add_compile_definitions(BLOCK_SIZE_RATIO=1.f/5.f)
 add_compile_definitions(GAME_FAIL_SOUND_PATH="${GAME_FAIL_SOUND}")
 add_compile_definitions(GAME_HIT_SOUND_PATH="${GAME_HIT_SOUND}")
 add_compile_definitions(GAME_DESTRUCTION_SOUND_PATH="${GAME_DESTRUCTION_SOUND}")
+add_compile_definitions(GAME_WIN_SOUND_PATH="${GAME_DESTRUCTION_SOUND}")
 
 
 find_package(SDL2 REQUIRED)
@@ -50,3 +52,4 @@ include(CPack)
 configure_file(${GAME_FAIL_SOUND} ${GAME_FAIL_SOUND} COPYONLY)
 configure_file(${GAME_HIT_SOUND} ${GAME_HIT_SOUND} COPYONLY)
 configure_file(${GAME_DESTRUCTION_SOUND} ${GAME_DESTRUCTION_SOUND} COPYONLY)
+configure_file(${GAME_WIN_SOUND} ${GAME_WIN_SOUND} COPYONLY)

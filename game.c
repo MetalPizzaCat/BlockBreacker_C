@@ -94,6 +94,14 @@ void update_game(Game *game, float delta)
             {
                 play_sound_destruction(game->audio);
             }
+            if(is_game_finished(game))
+            {
+                play_sound_win(game->audio);
+                // Adding a display window would require adding of text
+                // so loading of fonts and connection of SDL2_ttf
+                // which could be done but tbh not worth it today
+                printf("You win!");
+            }
             break;
         }
     }
@@ -128,6 +136,18 @@ void game_reset_ball_and_paddle(Game *game)
     Vector2 start_pos = vec2_add(vec2(DEFAULT_WINDOW_WIDTH / 2.f, DEFAULT_WINDOW_HEIGHT * 0.9f), vec2(10, 10));
     init_ball(&game->ball, vec2_add(start_pos, vec2(50, -15.f)), 5.f);
     init_block(&game->paddle, rect(start_pos, vec2(100, 10)), EPBC_LightGray, 0);
+}
+
+int is_game_finished(Game const *game)
+{
+    for (uint32_t i = 0; i < BLOCK_COUNT_TOTAL; i++)
+    {
+        if (valid_block(&game->blocks[i]))
+        {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 void game_ball_die(Game *game)

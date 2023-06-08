@@ -200,9 +200,14 @@ void run_game(AppState state, GameWindow *window, AudioManager *audio, uint64_t 
 int main(int argc, char **argv)
 {
     AppState state = AS_Game;
-    // This only works if BLOCK_COUNT_TOTAL < 64 since each bit in the number is a block
-    // i'm mainly using this because implementing file reading in c sucks :3
-    // but this will have to be changed if fancier ideas appear(like special blocks and such)
+    /*
+        Usage of map requires total block count to be <= 64
+        This is due to the fact that entire level layout is stored as a linear array 
+        and each bit in the unsigned 64 bit value represents one block(0 being block is already destroyed and 1 being block is in normal state)
+        this is much simpler then storing level layouts as separate file(and far more compact since storing as file would take more space)
+        but also very limiting
+        I didn't try more complex system since that is entirely pointless with the project's scope
+    */
     uint64_t map = 0;
 #if ENABLE_MAP_LOADING
     process_keys(argc, argv, &state, &map);

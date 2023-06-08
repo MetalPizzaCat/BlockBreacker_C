@@ -43,3 +43,8 @@ void game_ball_die(Game *game);
 /// @brief Resets ball and paddle to the default position and awaits player input
 /// @param game Game itself
 void game_reset_ball_and_paddle(Game *game);
+
+/// @brief Checks if all blocks in the game have been destroyed
+/// @param game 
+/// @return 1 if player broke all the blocks and 0 and if not
+int is_game_finished(Game const*game);
