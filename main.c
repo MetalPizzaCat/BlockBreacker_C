@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include "game.h"
+#include "keyhandler.h"
 
 SDL_Color create_sdl_color(uint8_t r, uint8_t g, uint8_t b)
 {
@@ -99,24 +100,33 @@ void draw_window(Game *game, Block *paddle, AppState const *state)
     game_window_end_drawing(game->window);
 }
 
-int main(int argc, char **argv)
+void handle_paddle_movement(Block *paddle, KeyHandler const *handler, float delta, const float speed)
 {
-    AppState state = AS_Game;
-    // This only works if BLOCK_COUNT_TOTAL < 64 since each bit in the number is a block
-    // i'm mainly using this because implementing file reading in c sucks :3
-    // but this will have to be changed if fancier ideas appear(like special blocks and such)
-    uint64_t map = 0;
-    process_keys(argc, argv, &state, &map);
-    GameWindow *window = create_game_window("lol no", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-    if (window == NULL)
+    if (handler->right_key_state)
     {
-        return EXIT_FAILURE;
+        paddle->collision_rect.position.x += speed * delta;
     }
+    if (handler->left_key_state)
+    {
+        paddle->collision_rect.position.x -= speed * delta;
+    }
+    if (handler->up_key_state)
+    {
+        paddle->collision_rect.position.y -= speed * delta;
+    }
+    if (handler->down_key_state)
+    {
+        paddle->collision_rect.position.y += speed * delta;
+    }
+}
+
+void run_game(AppState state, GameWindow *window, uint64_t map)
+{
     Game game;
+    KeyHandler handler;
+    init_key_handler(&handler, 0);
     // (uint64_t)-1 wraps around to becoming max value of unsigned 64 bit integer
     init_game(&game, window, (map ? map : (uint64_t)-1));
-    Block paddle;
-    init_block(&paddle, rect(vec2(DEFAULT_WINDOW_WIDTH * 0.8f, DEFAULT_WINDOW_HEIGHT * 0.8f), vec2(20, 20)), EPBC_Magenta);
     uint64_t now = SDL_GetPerformanceCounter();
     uint64_t last = 0;
     float deltaTime = 0.f;
@@ -132,42 +142,44 @@ int main(int argc, char **argv)
             {
                 process_mouse_input_editor(&game, &e);
             }
-            if (e.type == SDL_KEYDOWN)
-            {
-                if (e.key.keysym.scancode == SDL_SCANCODE_RIGHT)
-                {
-                    paddle.collision_rect.position.x += 10.f;
-                }
-                if (e.key.keysym.scancode == SDL_SCANCODE_LEFT)
-                {
-                    paddle.collision_rect.position.x -= 10.f;
-                }
-                if (e.key.keysym.scancode == SDL_SCANCODE_UP)
-                {
-                    paddle.collision_rect.position.y -= 10.f;
-                }
-                if (e.key.keysym.scancode == SDL_SCANCODE_DOWN)
-                {
-                    paddle.collision_rect.position.y += 10.f;
-                }
-            }
+            handle_keyboard_event(&handler, &e);
+            handle_paddle_movement(&game.paddle, &handler, deltaTime, 500.f);
         }
+
         last = now;
         now = SDL_GetPerformanceCounter();
         deltaTime = ((float)(now - last) * 1000.f / (float)SDL_GetPerformanceFrequency());
+
         if (state == AS_Game)
         {
-            paddle.color = rect_does_intersect(&game.ball.collision_rect, &paddle.collision_rect) ? EBC_Green : EBC_Blue;
+            game.paddle.color = rect_does_intersect(&game.ball.collision_rect, &game.paddle.collision_rect) ? EPBC_Green : EPBC_Blue;
 
             update_game(&game, deltaTime);
         }
-        draw_window(&game, &paddle, &state);
+        draw_window(&game, &game.paddle, &state);
     }
     if (state == AS_Editor)
     {
         uint64_t out = generate_map(&game);
         printf("Your map %lu\n", out);
     }
+}
+
+int main(int argc, char **argv)
+{
+    AppState state = AS_Game;
+    // This only works if BLOCK_COUNT_TOTAL < 64 since each bit in the number is a block
+    // i'm mainly using this because implementing file reading in c sucks :3
+    // but this will have to be changed if fancier ideas appear(like special blocks and such)
+    uint64_t map = 0;
+    process_keys(argc, argv, &state, &map);
+    GameWindow *window = create_game_window("lol no", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+    if (window == NULL)
+    {
+        return EXIT_FAILURE;
+    }
+    run_game(state, window, map);
+
     free_game_window(window);
 
     return EXIT_SUCCESS;

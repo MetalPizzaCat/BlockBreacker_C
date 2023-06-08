@@ -39,14 +39,6 @@ typedef enum
     EPBNC_MAX
 } EPrimaryBlockColor;
 
-/// @brief All possible states of the block
-typedef enum
-{
-    EBS_Normal,
-    EBS_Damaged,
-    EBS_Destroyed
-} EBlockState;
-
 // Simple way of calculating sharing offset :3
 #define COLOR_PRIMARY_OFFSET EBC_White - EPBC_LightGray
 

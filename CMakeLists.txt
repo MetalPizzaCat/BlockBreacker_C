@@ -11,7 +11,7 @@ add_compile_definitions(BLOCK_SIZE_RATIO=1.f/5.f)
 
 find_package(SDL2 REQUIRED)
 include_directories(block_breaker ${SDL2_INCLUDE_DIRS})
-add_executable(block_breaker main.c window.h window.c block.h block.c ball.h ball.c geometry.h geometry.c color.h color.c game.h game.c)
+add_executable(block_breaker main.c window.h window.c block.h block.c ball.h ball.c geometry.h geometry.c color.h color.c game.h game.c keyhandler.h keyhandler.c)
 target_link_libraries(block_breaker ${SDL2_LIBRARIES})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

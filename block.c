@@ -1,9 +1,9 @@
 #include "block.h"
 #include "geometry.h"
-void init_block(Block *block, Rect rect, EPrimaryBlockColor color)
+void init_block(Block *block, Rect rect, EPrimaryBlockColor color, int can_be_destroyed)
 {
     block->collision_rect = rect;
-    block->state = EBS_Normal;
+    block->state = can_be_destroyed ? EBS_Normal : EBS_Indestructible;
     block->color = color;
 }
 
@@ -30,12 +30,15 @@ void draw_block(Block const *block, SDL_Renderer *render)
 
 void damage_block(Block *block)
 {
-    block->state = EBS_Destroyed;
+    if (block->state != EBS_Indestructible)
+    {
+        block->state = EBS_Destroyed;
+    }
 }
 
 int valid_block(Block const *block)
 {
-    return block->state == EBS_Normal || block->state == EBS_Damaged;
+    return block->state != EBS_Destroyed;
 }
 
 void free_block(Block *block)

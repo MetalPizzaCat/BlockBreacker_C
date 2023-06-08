@@ -4,6 +4,15 @@
 #include "geometry.h"
 #include "color.h"
 
+/// @brief All possible states of the block
+typedef enum
+{
+    EBS_Normal,
+    EBS_Damaged,
+    EBS_Destroyed,
+    EBS_Indestructible
+} EBlockState;
+
 /// @brief Static block that can be destroyed by a ball
 typedef struct
 {
@@ -19,7 +28,7 @@ typedef struct
 /// @param block Instance of the block to update
 /// @param rect Collision rect of the block
 /// @param color Color of the block
-void init_block(Block *block, Rect rect, EPrimaryBlockColor color);
+void init_block(Block *block, Rect rect, EPrimaryBlockColor color, int can_be_destroyed);
 
 /// @brief Renders the block to the renderer
 /// @param block
