@@ -21,7 +21,7 @@ void init_game(Game *game, GameWindow *window, AudioManager *audio, uint64_t map
                     vec2((float)x * block_width, (float)y * block_height),
                     vec2(block_width, block_height)),
                 rand() % EPBNC_MAX, 1);
-
+#if ENABLE_MAP_LOADING
             uint64_t key = (map & (mask << offset)) >> offset;
             printf("%lu", key);
             if (!key)
@@ -29,6 +29,7 @@ void init_game(Game *game, GameWindow *window, AudioManager *audio, uint64_t map
                 damage_block(&game->blocks[x + y * BLOCK_COUNT_HORIZONTAL]);
             }
             offset--;
+#endif
         }
     }
     printf("\n");

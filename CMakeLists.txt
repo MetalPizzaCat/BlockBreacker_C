@@ -7,6 +7,12 @@ set(GAME_FAIL_SOUND audio/fail1.wav)
 set(GAME_HIT_SOUND audio/hit_soft1.wav)
 set(GAME_DESTRUCTION_SOUND audio/hit1.wav)
 
+option(USE_MAP_LOADING "Enable map loading(using a 64 bit integer to load map layout)" OFF)
+
+if(USE_MAP_LOADING)
+    add_compile_definitions(ENABLE_MAP_LOADING)
+endif()
+
 add_compile_definitions(DEFAULT_WINDOW_WIDTH=800)
 add_compile_definitions(DEFAULT_WINDOW_HEIGHT=600)
 add_compile_definitions(BLOCK_COUNT_VERTICAL=4)

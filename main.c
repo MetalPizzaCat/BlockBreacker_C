@@ -21,6 +21,7 @@ typedef enum
     AS_Editor
 } AppState;
 
+#if ENABLE_MAP_LOADING
 /// @brief Generates map key based on tiles in the game instance
 /// @param game Game instance to generate from
 /// @return Map key
@@ -59,6 +60,19 @@ void process_keys(int argc, char **argv, AppState *state, uint64_t *map)
                 printf("No map code provided, creating default map...");
             }
         }
+        if (!strcmp(argv[i], "--map"))
+        {
+            if (i + 1 < argc)
+            {
+                char *ptr;
+                printf("making map: %lu from %s \n", strtoul(argv[i + 1], 0, 10), argv[i + 1]);
+                *map = strtoul(argv[i + 1], 0, 10);
+            }
+            else
+            {
+                printf("No map code provided, creating default map...");
+            }
+        }
     }
 }
 
@@ -82,6 +96,7 @@ void process_mouse_input_editor(Game *game, SDL_Event *e)
         }
     }
 }
+#endif
 
 void draw_window(Game *game, Block *paddle, AppState const *state)
 {
@@ -148,10 +163,12 @@ void run_game(AppState state, GameWindow *window, AudioManager *audio, uint64_t 
         {
             if (e.type == SDL_QUIT)
                 quit = 1;
+#if ENABLE_MAP_LOADING
             if (e.type == SDL_MOUSEBUTTONDOWN && state == AS_Editor)
             {
                 process_mouse_input_editor(&game, &e);
             }
+#endif
             handle_keyboard_event(&handler, &e);
             handle_paddle_movement(&game.paddle, &handler, deltaTime, 500.f);
         }
@@ -171,11 +188,13 @@ void run_game(AppState state, GameWindow *window, AudioManager *audio, uint64_t 
         }
         draw_window(&game, &game.paddle, &state);
     }
+#if ENABLE_MAP_LOADING
     if (state == AS_Editor)
     {
         uint64_t out = generate_map(&game);
         printf("Your map %lu\n", out);
     }
+#endif
 }
 
 int main(int argc, char **argv)
@@ -185,7 +204,9 @@ int main(int argc, char **argv)
     // i'm mainly using this because implementing file reading in c sucks :3
     // but this will have to be changed if fancier ideas appear(like special blocks and such)
     uint64_t map = 0;
+#if ENABLE_MAP_LOADING
     process_keys(argc, argv, &state, &map);
+#endif
     GameWindow *window = create_game_window("lol no", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
     if (window == NULL)
     {
